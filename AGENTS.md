@@ -1,20 +1,20 @@
 # ADTeemo Project
 
-ADTeemoはLeague of Legendsのカスタムゲーム運営を支援するDiscord Botです。技術構成・setupは[CONTRIBUTING](./CONTRIBUTING.md)、現在利用できる機能は[README](./README.md)を参照してください。
+ADTeemoはLeague of Legendsの募集・カスタム運営・記録を支援するプロジェクトです。実現する振る舞いは[合意要件](./REQUIREMENTS.md)、実装順は[ADR 0007](./docs/adr/0007-product-requirements-baseline.md)、技術構成・setupは[CONTRIBUTING](./CONTRIBUTING.md)、現在利用できる機能は[README](./README.md)を参照してください。
 
 ## 正本と文書ルーティング
 
-作業前に必要な文書だけを読み、実装・設定・Issueの状態を推測で補完しないこと。
+作業前に必要な文書だけを読み、実装・設定・Issueの状態を推測で補完しないこと。既存code・Proposalをユーザー要件の正しさの根拠にしない。REQUIREMENTSは目標、code/schema/testsは現状、Issuesは作業状態の正本として区別する。
 
-| 読む場面                                          | 正本・参照先                                              |
-| ------------------------------------------------- | --------------------------------------------------------- |
-| 実行task、workspace、依存定義を変更する           | rootまたは対象workspaceの `deno.json`                     |
-| topic・変更pathから採用判断や調査を探す           | [docs/README.md](./docs/README.md)の逆引き                |
-| 現在の挙動・契約を確認する                        | 対象code/schema/tests。Proposalを現行仕様として扱わない   |
-| setup、環境変数、Docker、migration、Git/Issue運用 | [CONTRIBUTING.md](./CONTRIBUTING.md)                      |
-| テストを追加・再編する                            | [TESTING_STYLE.md](./TESTING_STYLE.md)                    |
-| message keyや文体を変更する                       | [messages/README.md](./messages/README.md)                |
-| 優先度、受け入れ条件、完了状態を確認する          | [GitHub Issues](https://github.com/akgm3i/ADTeemo/issues) |
+| 読む場面                                          | 正本・参照先                                                   |
+| ------------------------------------------------- | -------------------------------------------------------------- |
+| 実行task、workspace、依存定義を変更する           | rootまたは対象workspaceの `deno.json`                          |
+| topic・変更pathから採用判断や調査を探す           | [docs/README.md](./docs/README.md)の逆引き                     |
+| 現在の挙動・契約を確認する                        | 対象code/schema/tests。Proposalを現行仕様として扱わない        |
+| setup、環境変数、Docker、migration、Git/Issue運用 | [CONTRIBUTING.md](./CONTRIBUTING.md)                           |
+| テストを追加・再編する                            | [TESTING_STYLE.md](./TESTING_STYLE.md)                         |
+| message keyや文体を変更する                       | [messages/README.md](./messages/README.md)                     |
+| 優先度、受け入れ条件、完了状態を確認する          | [GitHub Issues](https://github.com/akigami-net/ADTeemo/issues) |
 
 外部サービスを扱う文書はVerified/Observedと再確認条件を読み、文書再編日を外部検証日とみなさないこと。
 
@@ -41,7 +41,7 @@ ADTeemoはLeague of Legendsのカスタムゲーム運営を支援するDiscord 
 - 会話は日本語で行う。
 - 新機能・バグ修正はTDDを基本とする。期待する振る舞いの固定方法、命名、ライブラリ、mock境界はTESTING_STYLEに従う。
 - API変更時は[APIエラー契約](./docs/api-error-contract.md)を読み、HTTP statusを成否の正本とする。HTTP bodyに`success`を含めない。Bot内部Resultの`success`と混同しない。
-- DB設計は、Riot ID・内部レート・戦績をグローバル、Discordギルド設定・募集イベント・ロールID・VC設定をギルド別として扱う。
+- DB設計は[合意要件の閲覧境界](./REQUIREMENTS.md#閲覧分析保持)と[ADR 0007](./docs/adr/0007-product-requirements-baseline.md)に従う。Riot identity・戦績の物理共有を、全ギルドの閲覧・分析・編成への利用許可と混同しない。非共有の別ギルド内カスタムを集計へ混ぜず、event参加者とgame出場履歴を区別する。
 - 既存の実装パターンを優先し、依頼外のリファクタリングや新機能を混在させない。
 
 ## GitHub / Issue Rules

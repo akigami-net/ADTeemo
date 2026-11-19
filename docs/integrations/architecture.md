@@ -7,7 +7,7 @@
 - Related: [#69](https://github.com/akgm3i/ADTeemo/issues/69), [#112](https://github.com/akgm3i/ADTeemo/issues/112), [#113](https://github.com/akgm3i/ADTeemo/issues/113), [#114](https://github.com/akgm3i/ADTeemo/issues/114)
 - Code: [API app](../../api/src/app.ts), [Bot main](../../bot/src/main.ts), [schema](../../api/src/db/schema.ts)
 - Tests: [Bot boundary tests](../../bot/check-runtime-boundary.test.ts), [repository tests](../../api/src/db/repositories.integration.test.ts)
-- Reviewed: 2026-09-29
+- Reviewed: 2026-11-19
 - Verified: 2026-09-29、local code reviewと一時SQLiteの並行更新・rollbackテスト。外部サービス実通信は未実施。
 
 ## 構成
@@ -27,7 +27,9 @@ Botはinteraction解釈・表示・Discord操作を担い、Riot API、静的デ
 
 ## データ所有境界
 
-プレイヤー本人のDiscord identity、Riot account、戦績はグローバルに扱う。メインロールはuserとguildの組、募集イベントとwatcherはguild単位で扱う。戦績は開催元eventとgame番号を参照し、記録時のPUUID snapshotを保持する。内部レートを採用する場合も全ギルド共有のプレイヤー評価という境界を維持するが、算出・集計は別の採用判断である。
+以下は現行保存構造の説明である。将来の設計判断は[合意要件](../../REQUIREMENTS.md#閲覧分析保持)と[ADR 0007](../adr/0007-product-requirements-baseline.md)に従う。物理的に一元保存しても、非共有の他guild内試合を閲覧・分析・編成へ流用しない。全ギルド共通評価を新実装の前提にしない。
+
+プレイヤー本人のDiscord identity、Riot account、戦績は現在一元保存する。メインロールはuserとguildの組、募集イベントとwatcherはguild単位で扱う。戦績は開催元eventとgame番号を参照し、記録時のPUUID snapshotを保持する。新しい分析・レート算出は閲覧/利用scopeを定めてから導入する。
 
 Discord側resource ID、募集channel、使用VC、saga状態はeventの所有情報である。guild設定とrole IDはguild別、Riot accountはPUUID単位でDiscord所有者とメイン指定を保持する。監視は全登録account、カスタムゲームはメイン1件を使う。[ADR 0006](../adr/0006-account-monitoring-policy.md)とschemaを正とし、Proposalの候補tableを現行モデルとみなさない。
 

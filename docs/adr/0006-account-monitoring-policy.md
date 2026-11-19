@@ -1,16 +1,18 @@
 # ADR 0006: Riot identityとサーバーごとの既定監視
 
 - Type: adr
-- Status: accepted
+- Status: superseded
 - Summary: Riot accountはPUUID単位で所有し、全登録アカウントを監視、カスタムゲームはメインだけを使う。
 - Read when: account所有権、メイン選択、監視scope、通知groupを変更するとき。
 - Related: [#89](https://github.com/akgm3i/ADTeemo/issues/89), [#48](https://github.com/akgm3i/ADTeemo/issues/48), [#34](https://github.com/akgm3i/ADTeemo/issues/34)
 - Code: [schema](../../api/src/db/schema.ts), [accounts repository](../../api/src/db/repositories/users.ts), [watchers repository](../../api/src/db/repositories/match_watchers.ts), [tracking service](../../bot/src/features/match_tracking_service.ts)
 - Tests: [accounts](../../api/src/db/riot_accounts.integration.test.ts), [policy](../../api/src/db/default_watch.integration.test.ts), [multi-account tracking](../../bot/src/features/match_tracking_service_regression.test.ts)
-- Reviewed: 2026-09-25
+- Reviewed: 2026-11-19
 - Verified: 2026-09-25、migrated SQLiteとservice回帰。
 
 ## Context
+
+2026-11-19の[ADR 0007](./0007-product-requirements-baseline.md)が将来設計の判断を引き継ぐ。特に「カスタムはメインだけ」を試合ごとの選択へ拡張する。全登録account監視・本人opt-out・PUUID整合性は維持する。以下は現行実装の根拠として残し、文書更新だけで新契約を実装済みとは扱わない。
 
 Discordユーザー1人にRiot accountを1件だけ保持すると、複数アカウントの追加が上書きになる。監視通知とカスタムゲームの参加者選択は別の単位を必要とする。2026-09-25の3iの指定により、全登録アカウント監視、guildとDiscordユーザーの組でopt-out、カスタムゲームはメイン1件を採用した。
 
