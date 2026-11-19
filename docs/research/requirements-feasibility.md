@@ -37,6 +37,8 @@
 
 受信音声の混合・配信、[DAVE](https://docs.discord.com/developers/topics/voice-connections#end-to-end-encryption-dave-protocol)、遅延、負荷、再接続・echo抑制は実験が必要。実音声中継の試験は未実施。「可能」は設計候補であり本番保証ではない。専用環境で片方向pause、3者の1人退出、独立2会議、同一guild競合を検証して採否を記録する。成立しない場合はM4の制約として提示し、未達のまま中継完了にはしない。
 
+2026-11-19の[配備先調査](./zero-cost-deployment.md)では、採用するCloudflare Workers構成のUDP非対応を確認した。[ADR 0008](../adr/0008-zero-cost-cloudflare-deployment.md)の通常機能の配備先決定を、音声中継の実行先確定とみなさない。追加費用0円・カード追加なしの条件で採用できる音声実行先は未確定であり、VOICE要件を保持したままM4の制約とする。
+
 ## 導入と絵文字
 
 [Guild API](https://docs.discord.com/developers/resources/guild)、[channel権限](https://docs.discord.com/developers/resources/channel#edit-channel-permissions)、[role階層](https://docs.discord.com/developers/topics/permissions#permission-hierarchy)に従う。role/channel作成に必要な権限と、channel overwriteの変更権限を分けて確認する。Administratorを一律に要求しない。
