@@ -1,16 +1,16 @@
 # 未採用の拡張と旧Roadmapの整理
 
 - Type: proposal
-- Status: proposed
+- Status: superseded
 - Summary: 旧SPEC/TASKSの未Issue化候補を、現行要求と混同せず保存する。
 - Read when: 既存Issueに収まらない機能の採用を判断するとき。
 - Related: [#51](https://github.com/akgm3i/ADTeemo/issues/51), [#89](https://github.com/akgm3i/ADTeemo/issues/89), [#126](https://github.com/akgm3i/ADTeemo/issues/126)
 - Code: [schema](../../api/src/db/schema.ts), [tasks](../../deno.json)
 - Tests: [test strategy](../../TESTING_STYLE.md)
-- Reviewed: 2026-09-25
+- Reviewed: 2026-11-19
 - Verified: not adopted
 
-この文書は作業queueでも進捗表でもない。旧Roadmapにあった構想を整理し、採用前に必要な判断を保持する。ここにあるだけでは実装を決定しない。採用する場合はscopeと受け入れ条件を定めてGitHub Issueを正本にする。
+2026-11-19の[合意要件](../../REQUIREMENTS.md)と[ADR 0007](../adr/0007-product-requirements-baseline.md)により置き換えた履歴。Web・分析・Botによる公式情報配信は採用された。以下の「未採用」「採用しない」は過去の判断であり、現在の開発scopeを制約しない。Podman保留は維持する。作業状態はIssuesで管理する。
 
 ## 既存Issueへ集約する要求
 

@@ -1,16 +1,16 @@
 # イベント中心のカスタムゲーム運営案
 
 - Type: proposal
-- Status: proposed
+- Status: superseded
 - Summary: 採用済みのイベント操作から分けて、再編成と戦力均等化の未採用案を保持する。
 - Read when: イベント選択、参加確定、再戦、ギルド設定を設計するとき。
 - Related: [#51](https://github.com/akgm3i/ADTeemo/issues/51)
 - Code: [event schema](../../api/src/db/schema.ts), [commands](../../bot/src/commands)
 - Tests: [event tests](../../api/src/routes/events.test.ts)
-- Reviewed: 2026-09-25
+- Reviewed: 2026-11-19
 - Verified: 2026-09-25、採用済み部分は利用ガイドへ移管。残る再編成・戦力均等化はnot adopted。
 
-未採用の構想を整理したProposal。決定と作業は[#51](https://github.com/akgm3i/ADTeemo/issues/51)で追跡し、現在提供する操作は[利用ガイド](../user/custom-games.md)で確認する。
+2026-11-19の[合意要件](../../REQUIREMENTS.md#同一サーバー内カスタム)と[ADR 0007](../adr/0007-product-requirements-baseline.md)により置き換えた履歴。再編成・サイド/レーン変更・待機者交代・段階操作・均等化は採用済みの目標であり、下記の採否待ちを再要求しない。32通り/全ギルド共通合計レート案は採用していない。現在提供する操作は[利用ガイド](../user/custom-games.md)、作業は[#51](https://github.com/akigami-net/ADTeemo/issues/51)を参照する。
 
 ## 候補フロー
 

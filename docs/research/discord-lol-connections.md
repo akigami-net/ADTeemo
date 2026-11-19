@@ -1,18 +1,20 @@
 # Discord LoL / Riot Games connected accounts調査
 
 - Type: research
-- Status: current
+- Status: historical
 - Summary: 現行公式資料の再確認、過去のservice type記述の訂正、実OAuth未検証点。
 - Read when: Discord連携を実装する前、OAuth2仕様変更時。
 - Related: [#35](https://github.com/akgm3i/ADTeemo/issues/35), [#89](https://github.com/akgm3i/ADTeemo/issues/89)
 - Code: [RSO routes](../../api/src/routes/auth.ts)
 - Tests: [auth tests](../../api/src/routes/auth.test.ts)
-- Reviewed: 2026-09-25
+- Reviewed: 2026-11-19
 - Verified: 2026-09-25、Discord/Riotの公開公式資料。user consent/tokenを伴う実データは未検証。
 
 - Observed: 旧メモはunknown（観測日の記録なし）。今回の公式資料参照は2026-09-25。
 
 non-normativeな調査記録。2026-09-25に公開公式資料を再読した。旧メモの観測日は推測で補わず、実アカウントのOAuth2同意・user token・接続応答は確認していない。
+
+この調査の結論は履歴として保持する。ヒアリングで確認した新しいRiot–Discord連携と第三者BotのAPIアクセスの違いは[追加調査](./requirements-feasibility.md#riotdiscord連携と試合取得)を参照する。連携は任意であり、従来connectionsからの取得確認を初期提供の必須依存にしない。Reviewedの更新は実OAuth検証を意味しない。
 
 ## 結論
 

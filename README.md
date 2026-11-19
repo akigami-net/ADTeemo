@@ -2,7 +2,9 @@
 
 ![GitHub License](https://img.shields.io/github/license/akgm3i/ADTeemo)
 
-ADTeemoはLeague of Legendsのカスタムゲーム運営を支援するDiscord Botです。Discord上で参加募集、ロール希望の収集、チーム分け、VC移動、戦績記録、LoL試合監視を扱えます。
+ADTeemoは、身内と交流先のDiscordサーバーでLeague of Legendsの募集・カスタム運営・記録を支援するプロジェクトです。Discord BotとWebによる将来の提供範囲は[合意要件](./REQUIREMENTS.md)、実装順と完了判定は[ADR 0007](./docs/adr/0007-product-requirements-baseline.md)を参照してください。
+
+以下は現在のBot実装で提供する機能です。合意要件に含まれる通常募集、日程調整、Web分析、交流機能等の実装状況は[GitHub Issues](https://github.com/akigami-net/ADTeemo/issues)で管理します。
 
 ## 主な機能
 
@@ -62,7 +64,7 @@ ADTeemoはLeague of Legendsのカスタムゲーム運営を支援するDiscord 
 - [試合中・結果通知の読み方](./docs/user/match-display.md)
 - [開発・運用](./CONTRIBUTING.md)
 - [設計・調査・提案の索引](./docs/README.md)
-- [要望・不具合・Roadmap](https://github.com/akgm3i/ADTeemo/issues)
+- [要望・不具合・Roadmap](https://github.com/akigami-net/ADTeemo/issues)
 
 commandの提供可否は[registry](./bot/src/common/command_registry.ts)、正確なoption定義は[各command実装](./bot/src/commands)が正本です。
 

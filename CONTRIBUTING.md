@@ -216,7 +216,7 @@ Conventional Commitsはcommit messageだけに適用し、Issueタイトルは�
 - 実装順序を制約する関係は`Depends on`、背景の共有だけは`Related`にします。親子関係だけから依存順を推測しません。
 - Issue本文は問題、scope、受け入れ条件、依存、関連docリンクを保持します。作業状態・子タスク・完了履歴をrepo内のRoadmapへコピーしません。
 - 調査・選択肢・採用判断は[docsの分類規則](./docs/README.md)に従ってrepo文書へ残し、Issue/PRからリンクします。文書を移動した場合は参照元を直し、外部リンクを更新できない旧pathには短い移管案内を残します。
-- 仕様はcode/schema/tests、message本文はcatalogが正本です。文書には意味、判断理由、運用上必要な条件を残し、実装の列・定数・field順序を二重管理しません。
+- 実現する振る舞いは[合意要件](./REQUIREMENTS.md)、採用理由・実装順は[ADR 0007](./docs/adr/0007-product-requirements-baseline.md)、現在の契約はcode/schema/tests、message本文はcatalogが正本です。現在の実装だけを理由に合意要件を落とさず、差をIssueで追跡します。実装の列・定数・field順序は文書へ二重管理しません。
 
 文書変更の検証は[文書索引の手順](./docs/README.md)に従います。テスト戦略とmock境界は[TESTING_STYLE](./TESTING_STYLE.md)を参照します。
 

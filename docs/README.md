@@ -1,8 +1,10 @@
 # ドキュメント索引
 
-利用方法は[README](../README.md)、開発・運用は[CONTRIBUTING](../CONTRIBUTING.md)、テスト設計は[TESTING_STYLE](../TESTING_STYLE.md)、AI agentの制約は[AGENTS](../AGENTS.md)から入る。作業・優先度・受け入れ条件・完了状態は[GitHub Issues](https://github.com/akgm3i/ADTeemo/issues)だけで管理する。
+利用方法は[README](../README.md)、開発・運用は[CONTRIBUTING](../CONTRIBUTING.md)、テスト設計は[TESTING_STYLE](../TESTING_STYLE.md)、AI agentの制約は[AGENTS](../AGENTS.md)から入る。作業・優先度・受け入れ条件・完了状態は[GitHub Issues](https://github.com/akigami-net/ADTeemo/issues)だけで管理する。
 
 ## 正本の選び方
+
+これから実現する振る舞いは[合意要件](../REQUIREMENTS.md)、段階的な提供と完了判定は[ADR 0007](./adr/0007-product-requirements-baseline.md)を読む。現在のcode・User guideと区別し、既存実装から要件の採否を逆算しない。[外部機能の実現性](./research/requirements-feasibility.md)にはヒアリング時の調査根拠と未検証点を記録する。
 
 | 確認したいこと                | 正本                                                                                                                 |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------------- |
@@ -29,24 +31,24 @@ statusは文書の位置づけを表し、Issueの完了状態ではない。外
 
 ## Topic / 変更対象から読む
 
-| Topic / path                                     | 最初に読む文書                                                      | 次に確認するもの                                                                                         |
-| ------------------------------------------------ | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| 全体構成、workspace境界、`api/src/db/schema.ts`  | [構成とデータ所有境界](./integrations/architecture.md)              | 関連repository / migration tests                                                                         |
-| Botのproduction権限、`bot/deno.json`、Docker起動 | [Bot実行権限](./integrations/bot-runtime-permissions.md)            | permission smoke、CONTRIBUTING                                                                           |
-| 認証、`api/src/service_auth.ts`、Docker公開設定  | [ADR 0001](./adr/0001-bot-service-authentication.md)                | CONTRIBUTING、auth tests                                                                                 |
-| ログ、`lib/logger/`、API request middleware      | [ADR 0002](./adr/0002-structured-logging-trust-boundary.md)         | logger tests                                                                                             |
-| API route、`api/src/contract/`、Bot API client   | [APIエラー契約](./api-error-contract.md)                            | schema / route / client tests                                                                            |
-| パッチノート通知の担当範囲                       | [採用しない範囲](./proposals/project-scope.md#採用しない範囲)       | GAS側で対応。ADTeemoへの実装は却下                                                                       |
-| RSO、auth callback、OAuth identity               | [RSOと登録アカウント](./integrations/rso.md)                        | provider / callback縦断tests、command registry                                                           |
-| イベント作成・取消、`events.ts`、event saga      | [イベント整合性・復旧](./custom-game-event-consistency.md)          | [現在の操作](./user/custom-games.md)、[フロー案](./proposals/custom-game-flow.md)                        |
-| 戦績、`matches.ts`、record-match                 | [戦績整合性・移行](./record-match-consistency.md)                   | repository / 縦断tests                                                                                   |
-| 通知outbox、再試行、Discord送信・状態保存        | [通知deliveryと復旧](./integrations/match-notification-delivery.md) | notification delivery tests                                                                              |
-| 監視renderer / notifier / state                  | [試合通知ガイド](./user/match-display.md)                           | [表示ADR](./adr/0003-match-display-priorities.md)、[追加案](./proposals/match-display-extensions.md)     |
-| League-v4、rank snapshot、LP計算                 | [ランクADR](./adr/0004-ranked-snapshot-lifecycle.md)                | [ランク表示ガイド](./user/ranked-lp.md)                                                                  |
-| OP.GG client / service                           | [OP.GG連携](./integrations/opgg.md)                                 | [判断](./adr/0005-optional-opgg-integration.md)、[観測記録](./research/opgg-server-actions.md)           |
-| 登録・複数account・watcher policy                | [opt-out Proposal](./proposals/default-watch-opt-out.md)            | [Discord調査](./research/discord-lol-connections.md)、[#89](https://github.com/akgm3i/ADTeemo/issues/89) |
-| `messages/**/*.json` / message key               | [messages編集ガイド](../messages/README.md)                         | [Teemo文体](../messages/TEEMO_STYLE.md)、[参考記録](./research/teemo-character-notes.md)                 |
-| 新機能のscope判断                                | [未採用の拡張](./proposals/project-scope.md)                        | GitHub Issues                                                                                            |
+| Topic / path                                     | 最初に読む文書                                                      | 次に確認するもの                                                                                              |
+| ------------------------------------------------ | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| 全体構成、workspace境界、`api/src/db/schema.ts`  | [構成とデータ所有境界](./integrations/architecture.md)              | 関連repository / migration tests                                                                              |
+| Botのproduction権限、`bot/deno.json`、Docker起動 | [Bot実行権限](./integrations/bot-runtime-permissions.md)            | permission smoke、CONTRIBUTING                                                                                |
+| 認証、`api/src/service_auth.ts`、Docker公開設定  | [ADR 0001](./adr/0001-bot-service-authentication.md)                | CONTRIBUTING、auth tests                                                                                      |
+| ログ、`lib/logger/`、API request middleware      | [ADR 0002](./adr/0002-structured-logging-trust-boundary.md)         | logger tests                                                                                                  |
+| API route、`api/src/contract/`、Bot API client   | [APIエラー契約](./api-error-contract.md)                            | schema / route / client tests                                                                                 |
+| パッチノート・ニュース・Rioterプレビュー配信     | [合意要件](../REQUIREMENTS.md#公式情報とパッチプレビュー)           | M5で採用。[旧GAS側のみの判断](./proposals/project-scope.md#採用しない範囲)は履歴。                            |
+| RSO、auth callback、OAuth identity               | [RSOと登録アカウント](./integrations/rso.md)                        | provider / callback縦断tests、command registry                                                                |
+| イベント作成・取消、`events.ts`、event saga      | [イベント整合性・復旧](./custom-game-event-consistency.md)          | [現在の操作](./user/custom-games.md)、[フロー案](./proposals/custom-game-flow.md)                             |
+| 戦績、`matches.ts`、record-match                 | [戦績整合性・移行](./record-match-consistency.md)                   | repository / 縦断tests                                                                                        |
+| 通知outbox、再試行、Discord送信・状態保存        | [通知deliveryと復旧](./integrations/match-notification-delivery.md) | notification delivery tests                                                                                   |
+| 監視renderer / notifier / state                  | [試合通知ガイド](./user/match-display.md)                           | [表示ADR](./adr/0003-match-display-priorities.md)、[追加案](./proposals/match-display-extensions.md)          |
+| League-v4、rank snapshot、LP計算                 | [ランクADR](./adr/0004-ranked-snapshot-lifecycle.md)                | [ランク表示ガイド](./user/ranked-lp.md)                                                                       |
+| OP.GG client / service                           | [OP.GG連携](./integrations/opgg.md)                                 | [判断](./adr/0005-optional-opgg-integration.md)、[観測記録](./research/opgg-server-actions.md)                |
+| 登録・複数account・watcher policy                | [opt-out Proposal](./proposals/default-watch-opt-out.md)            | [Discord調査](./research/discord-lol-connections.md)、[#89](https://github.com/akigami-net/ADTeemo/issues/89) |
+| `messages/**/*.json` / message key               | [messages編集ガイド](../messages/README.md)                         | [Teemo文体](../messages/TEEMO_STYLE.md)、[参考記録](./research/teemo-character-notes.md)                      |
+| 新機能のscope判断                                | [合意要件](../REQUIREMENTS.md)                                      | [ADR 0007](./adr/0007-product-requirements-baseline.md)、GitHub Issues。旧scope案は履歴。                     |
 
 ## 種別別索引
 
@@ -98,4 +100,4 @@ deno fmt --check README.md SPEC.md TASKS.md CONTRIBUTING.md AGENTS.md docs/ mess
 git diff --check
 ```
 
-`check-docs.ts`はroot/docs/messagesのMarkdownにある相対リンクの参照先・見出し、docs/messages文書の中央索引掲載、必須header、未知Type/Statusを検査する。Markdownのinline相対リンクを検査対象とし、外部URLの到達性は確認しない。Reviewed/Verifiedの真偽や内容の整合は関連code/testsとのreviewで確認する。自動CIへの組込みは[#122](https://github.com/akgm3i/ADTeemo/issues/122)の責務とし、この再編ではquality taskを変更しない。
+`check-docs.ts`はroot/docs/messagesのMarkdownにある相対リンクの参照先・見出し、docs/messages文書の中央索引掲載、必須header、未知Type/Statusを検査する。Markdownのinline相対リンクを検査対象とし、外部URLの到達性は確認しない。Reviewed/Verifiedの真偽や内容の整合は関連code/testsとのreviewで確認する。自動CIへの組込みは[#122](https://github.com/akigami-net/ADTeemo/issues/122)の責務とし、この再編ではquality taskを変更しない。

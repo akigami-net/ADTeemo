@@ -1,6 +1,6 @@
 # 仕様・設計の参照先
 
-仕様と設計の入口は[docs/README.md](./docs/README.md)です。この文書は移管先のnavigationだけを保持し、進捗、将来checklist、API/DB契約を複製しません。
+これから実現する振る舞いは[合意要件](./REQUIREMENTS.md)、採用理由と実装順は[ADR 0007](./docs/adr/0007-product-requirements-baseline.md)、設計・調査の入口は[docs/README.md](./docs/README.md)です。この文書は移管先のnavigationだけを保持し、進捗、将来checklist、API/DB契約を複製しません。下表の旧Proposalは履歴であり、新要件の採否を上書きしません。
 
 | 旧SPECの内容                                  | 正本・移管先                                                                                                                                                                                       |
 | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -13,8 +13,8 @@
 | OP.GG連携・調査                               | [Integration](./docs/integrations/opgg.md)、[Research](./docs/research/opgg-server-actions.md)、[ADR](./docs/adr/0005-optional-opgg-integration.md)                                                |
 | カスタムゲームの将来フロー                    | [未採用Proposal](./docs/proposals/custom-game-flow.md)                                                                                                                                             |
 | 既定監視とDiscord連携調査                     | [Proposal](./docs/proposals/default-watch-opt-out.md)、[Research](./docs/research/discord-lol-connections.md)                                                                                      |
-| 複数account、Podman、パッチノート、その他構想 | [要求の整理と参照先](./docs/proposals/project-scope.md)、[GitHub Issues](https://github.com/akgm3i/ADTeemo/issues)                                                                                 |
+| 複数account、Podman、パッチノート、その他構想 | [要求の整理と参照先](./docs/proposals/project-scope.md)、[GitHub Issues](https://github.com/akigami-net/ADTeemo/issues)                                                                            |
 | 認証・外部公開・ログ                          | [認証ADR](./docs/adr/0001-bot-service-authentication.md)、[ログADR](./docs/adr/0002-structured-logging-trust-boundary.md)、[運用](./CONTRIBUTING.md)                                               |
 | HTTPエラー、Riot queue、message、テスト       | [APIエラー](./docs/api-error-contract.md)、[構成ガイド](./docs/integrations/architecture.md)、[messages](./messages/README.md)、[TESTING_STYLE](./TESTING_STYLE.md)                                |
 
-正確なAPI・DB・command・message契約はcode/schema/tests、taskと依存はdeno.jsonが正本です。
+現在の正確なAPI・DB・command・message契約はcode/schema/tests、taskと依存はdeno.jsonが正本です。将来の要件充足とは区別します。
