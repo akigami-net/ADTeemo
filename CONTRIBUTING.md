@@ -105,6 +105,8 @@ DBの正本は[schema](./api/src/db/schema.ts)と[drizzle migrations](./drizzle)
 
 現行の開発・配備にはDocker / Docker Composeを使用します。Podman対応（#49）は保留で、runtime設定やCIには採用していません。実起動未検証を含む[調査記録](./docs/research/podman-compatibility.md)は参考資料として保持します。
 
+追加費用0円・カード追加なしの配備先として[Cloudflareへの移植方針](./docs/adr/0008-zero-cost-cloudflare-deployment.md)を採用しています。現在のComposeをそのまま配置するものではなく、Worker/Gateway/DB adapterと配備手順は未実装です。以下は現行Docker手順であり、Cloudflare配備済みの説明ではありません。
+
 ### Development
 
 開発用コンテナはソースを `/app` にマウントし、Deno cacheをDocker volumeに保持します。コンテナ起動時にアプリケーションは自動開始しないため、必要なtaskを `docker compose exec` で実行します。root `.dockerignore` は `.env*`、`.git`、coverage、`node_modules`、runtime dataをbuild contextから除外します。

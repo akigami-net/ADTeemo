@@ -6,6 +6,8 @@
 
 これから実現する振る舞いは[合意要件](../REQUIREMENTS.md)、段階的な提供と完了判定は[ADR 0007](./adr/0007-product-requirements-baseline.md)を読む。現在のcode・User guideと区別し、既存実装から要件の採否を逆算しない。[外部機能の実現性](./research/requirements-feasibility.md)にはヒアリング時の調査根拠と未検証点を記録する。
 
+追加費用0円・カード追加なしでの配備判断は[ADR 0008](./adr/0008-zero-cost-cloudflare-deployment.md)、公式無料枠・候補比較・ローカルruntime試験の根拠は[配備先調査](./research/zero-cost-deployment.md)を参照する。設計採用と本番提供済みを区別し、Cloudflare構成で音声中継まで満たしたとは扱わない。
+
 | 確認したいこと                | 正本                                                                                                                 |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | 利用できるcommand・option     | [registry](../bot/src/common/command_registry.ts)と[各command定義](../bot/src/commands)、利用者向け説明はUser guide  |
