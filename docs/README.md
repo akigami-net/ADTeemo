@@ -8,6 +8,8 @@
 
 追加費用0円・カード追加なしでの配備判断は[ADR 0008](./adr/0008-zero-cost-cloudflare-deployment.md)、公式無料枠・候補比較・ローカルruntime試験の根拠は[配備先調査](./research/zero-cost-deployment.md)を参照する。設計採用と本番提供済みを区別し、Cloudflare構成で音声中継まで満たしたとは扱わない。
 
+音声の暫定候補は[Cloud Run Jobsの構成図・検証結果](./research/cloud-run-voice-relay.md)を参照する。公開仕様・ローカルprobeの成功と、Discord実接続・追加請求0円の成立を分ける。
+
 | 確認したいこと                | 正本                                                                                                                 |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | 利用できるcommand・option     | [registry](../bot/src/common/command_registry.ts)と[各command定義](../bot/src/commands)、利用者向け説明はUser guide  |

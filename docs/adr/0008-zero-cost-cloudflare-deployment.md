@@ -87,6 +87,8 @@ WorkersからTURNへ接続する専用transportは、通常の音声実装の移
 
 VOICE-01〜04は維持する。#172へこの具体的な制約を反映し、UDP音声処理を継続できる実行先と費用条件が成立するまで、M4を提供可能/完了としない。M1のVC移動・カスタム運営やM3の交流募集は実装を進められる。勝手に「全員が別サーバーへ移動する」要件へ置き換えない。
 
+2026-11-25追記: 暫定候補の[Cloud Run Jobsの構成図・検証結果](../research/cloud-run-voice-relay.md)を追加した。UDP/native対応、起動停止・同時実行の設計、ローカルprobeを確認している。実機DAVE接続と費用条件は未成立であり、本ADRの音声採用へは昇格しない。
+
 ## Consequences
 
 常駐VMを契約せず初期機能を提供する代わりに、runtime/DB/Discord adapterの移植がM1に必要となる。既存Docker環境は移行前の開発・回帰確認用として残し、Cloudflare用手順が動く前にREADMEを配備済みへ書き換えない。
