@@ -7,7 +7,7 @@
 - Related: [合意要件](../../REQUIREMENTS.md), [実装順](../adr/0007-product-requirements-baseline.md)
 - Code: [現行registry](../../bot/src/common/command_registry.ts), [現行Riot client](../../api/src/riot_api.ts)
 - Tests: none（新機能の外部統合試験は未実施）。既存mock testを実APIの証明にしない。
-- Reviewed: 2026-11-19
+- Reviewed: 2026-11-25
 - Verified: ヒアリング中の公開資料調査とFxEmbed公開APIのサンプル取得。2026-11-19に保存済みJSONのcode=200と内容を再確認。Discord/Riotの本人同意・実音声接続は未検証。
 - Observed: ヒアリング中に公開資料・FxEmbed応答を確認した個々の時刻は未記録。2026-11-19は証拠整理日であり、全外部資料の再取得日ではない。
 
@@ -36,6 +36,8 @@
 [discord.js guide](https://discordjs.guide/voice/voice-connections)、[connection store](https://github.com/discordjs/discord.js/blob/main/packages/voice/src/DataStore.ts)、[voice package](https://github.com/discordjs/discord.js/blob/main/packages/voice/README.md)により、同じBotアカウントの同一guild内で異なるVCへ同時接続する構成を前提にしない。別guildの3者会議や互いに重ならないA↔B/C↔Dは構成上の候補である。これは参加者を同じサーバーのRed/Blue VCへ移動する操作とは別の制限。
 
 受信音声の混合・配信、[DAVE](https://docs.discord.com/developers/topics/voice-connections#end-to-end-encryption-dave-protocol)、遅延、負荷、再接続・echo抑制は実験が必要。実音声中継の試験は未実施。「可能」は設計候補であり本番保証ではない。専用環境で片方向pause、3者の1人退出、独立2会議、同一guild競合を検証して採否を記録する。成立しない場合はM4の制約として提示し、未達のまま中継完了にはしない。
+
+WorkersのUDP非対応を[配備基盤の調査](./deployment-platforms.md)で確認した。音声処理の候補は[Cloud Run Jobs案](../proposals/cloud-run-voice-relay.md)、仕様と実測値は[音声の検証結果](./cloud-run-voice-relay.md)を参照する。
 
 ## 導入と絵文字
 

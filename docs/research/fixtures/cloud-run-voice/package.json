@@ -1,0 +1,12 @@
+{
+  "name": "adteemo-cloud-run-voice-probe",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "probe": "node probe.mjs"
+  },
+  "dependencies": {
+    "@discordjs/opus": "0.11.0",
+    "@discordjs/voice": "0.19.2"
+  }
+}

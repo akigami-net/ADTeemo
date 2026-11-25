@@ -6,6 +6,8 @@ ADTeemoは、身内と交流先のDiscordサーバーでLeague of Legendsの募�
 
 以下は現在のBot実装で提供する機能です。合意要件に含まれる通常募集、日程調整、Web分析、交流機能等の実装状況は[GitHub Issues](https://github.com/akigami-net/ADTeemo/issues)で管理します。
 
+開発者向け：[全体構成図](./docs/integrations/architecture.md#全体構成) · [開発・配備手順](./CONTRIBUTING.md)
+
 ## 主な機能
 
 - Discord slash commandによるBot操作

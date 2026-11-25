@@ -7,7 +7,7 @@
 - Related: [実行計画 #158](https://github.com/akigami-net/ADTeemo/issues/158)
 - Code: [現行schema](../../api/src/db/schema.ts), [現行command registry](../../bot/src/common/command_registry.ts)
 - Tests: [既存custom flow](../../bot/src/commands/custom-game-flow.test.ts), [既存監視policy](../../tests/integration/watch_policy.integration.test.ts)
-- Reviewed: 2026-11-19
+- Reviewed: 2026-11-25
 - Verified: 2026-11-19、main c714912のcode・文書・open Issue/PRを照合。新要件の実装・外部サービス実運用は未検証。
 
 ## Context
@@ -15,6 +15,8 @@
 既存実装に合わせたIssue分割では、ユーザーが望む通常募集、日時調整、長期分析、交流戦、情報配信を捉えきれていなかった。ヒアリングにより[合意要件](../../REQUIREMENTS.md)を再定義した。ここで採用したのは目標と進め方であり、将来機能を実装済みとは扱わない。
 
 タスクの状態・受け入れchecklistはGitHub Issuesだけに置く。本書は長期的な依存理由とリリースの成果を保持し、Issueのopen/closed状態や進捗率を複製しない。
+
+配備方針は[ADR 0008](./0008-cloudflare-deployment.md)で補完する。Cloudflareへの移植をM1に含め、音声中継の基盤はM4で検証する。
 
 ## Decision
 
@@ -39,7 +41,7 @@
 | M5 公式情報・プレビュー配信   | 公式記事と、指定Rioter本人の本文・画像・自己返信を根拠付きの日本語で配信し、訂正・補足を反映する。X APIへの課金なしで成立する。                                                                                                                              | NEWS                                                                              |
 | M6 Wiki質問機能               | DiscordでLoL限定・Wikiのみを根拠に会話でき、出典提示、未記載・範囲外の処理、サーバー文体を満たす。                                                                                                                                                           | QA、LANGの再利用                                                                  |
 
-M1の共通設定・通知基盤が整えばM5/M6は独立して進められる。番号順の直列実装を強制しない。M4の音声技術検証、M5の取得継続性、M6のWiki利用条件は早期に調査するが、これらをM1のリリース依存にしない。人員・稼働時間が未提示のため、根拠のない暦日締切は置かない。
+M1の共通設定・通知基盤が整えばM5/M6は独立して進められる。番号順の直列実装を強制しない。M4の音声技術検証にはADR 0008の実行先制約があり、環境が成立する前に実音声を検証済みとしない。M5の取得継続性、M6のWiki利用条件は早期に調査するが、これらと音声中継をM1のリリース依存にしない。人員・稼働時間が未提示のため、根拠のない暦日締切は置かない。
 
 ### 実装順とPRの単位
 
