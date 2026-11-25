@@ -1,8 +1,8 @@
 # ADTeemo 開発者向けガイド
 
-この文書は ADTeemo の開発・検証・ローカル実行に必要な情報をまとめます。利用者向けの概要は [README.md](./README.md)、設計・調査の入口は [docs/README.md](./docs/README.md)、テスト規約は [TESTING_STYLE.md](./TESTING_STYLE.md) を参照してください。
+開発環境の準備、起動、検証、配備の手順をまとめます。全体構成図は[システム構成](./docs/integrations/architecture.md#全体構成)、設計判断と調査は[文書索引](./docs/README.md)、テスト規約は[TESTING_STYLE](./TESTING_STYLE.md)を参照してください。
 
-## 技術構成
+## 現行の技術スタック
 
 | Area        | Stack                                          |
 | ----------- | ---------------------------------------------- |
@@ -105,7 +105,7 @@ DBの正本は[schema](./api/src/db/schema.ts)と[drizzle migrations](./drizzle)
 
 現行の開発・配備にはDocker / Docker Composeを使用します。Podman対応（#49）は保留で、runtime設定やCIには採用していません。実起動未検証を含む[調査記録](./docs/research/podman-compatibility.md)は参考資料として保持します。
 
-追加費用0円・カード追加なしの配備先として[Cloudflareへの移植方針](./docs/adr/0008-zero-cost-cloudflare-deployment.md)を採用しています。現在のComposeをそのまま配置するものではなく、Worker/Gateway/DB adapterと配備手順は未実装です。以下は現行Docker手順であり、Cloudflare配備済みの説明ではありません。
+Cloudflareへの移植は[配備方針](./docs/adr/0008-cloudflare-deployment.md)に従って進めます。以下は現行のDocker手順です。
 
 ### Development
 

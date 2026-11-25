@@ -7,7 +7,7 @@
 - Related: [実行計画 #158](https://github.com/akigami-net/ADTeemo/issues/158)
 - Code: [現行schema](../../api/src/db/schema.ts), [現行command registry](../../bot/src/common/command_registry.ts)
 - Tests: [既存custom flow](../../bot/src/commands/custom-game-flow.test.ts), [既存監視policy](../../tests/integration/watch_policy.integration.test.ts)
-- Reviewed: 2026-11-19
+- Reviewed: 2026-11-25
 - Verified: 2026-11-19、main c714912のcode・文書・open Issue/PRを照合。新要件の実装・外部サービス実運用は未検証。
 
 ## Context
@@ -16,7 +16,7 @@
 
 タスクの状態・受け入れchecklistはGitHub Issuesだけに置く。本書は長期的な依存理由とリリースの成果を保持し、Issueのopen/closed状態や進捗率を複製しない。
 
-追加費用0円・カード追加なしの配備条件は[ADR 0008](./0008-zero-cost-cloudflare-deployment.md)で補完する。通常機能はCloudflare向け移植をM1へ含める。音声中継の実行先は同条件で確定しておらず、M4の要件を落とさず制約を明示する。
+配備方針は[ADR 0008](./0008-cloudflare-deployment.md)で補完する。Cloudflareへの移植をM1に含め、音声中継の基盤はM4で検証する。
 
 ## Decision
 

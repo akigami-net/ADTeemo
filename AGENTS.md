@@ -1,6 +1,6 @@
 # ADTeemo Project
 
-ADTeemoはLeague of Legendsの募集・カスタム運営・記録を支援するプロジェクトです。実現する振る舞いは[合意要件](./REQUIREMENTS.md)、実装順は[ADR 0007](./docs/adr/0007-product-requirements-baseline.md)、技術構成・setupは[CONTRIBUTING](./CONTRIBUTING.md)、現在利用できる機能は[README](./README.md)を参照してください。
+ADTeemoはLeague of Legendsの募集・カスタム運営・記録を支援するプロジェクトです。実現する振る舞いは[合意要件](./REQUIREMENTS.md)、実装順は[ADR 0007](./docs/adr/0007-product-requirements-baseline.md)、技術構成は[システム構成](./docs/integrations/architecture.md)、setupは[CONTRIBUTING](./CONTRIBUTING.md)、現在利用できる機能は[README](./README.md)を参照してください。
 
 ## 正本と文書ルーティング
 

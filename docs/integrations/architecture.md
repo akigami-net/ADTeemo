@@ -1,57 +1,88 @@
-# 構成とデータ所有境界
+# システム構成
 
 - Type: integration
 - Status: current
-- Summary: Bot/API/DBの責務と変更時に読む正本。
-- Read when: workspace境界、DBモデル、外部API取得を変更するとき。
-- Related: [#69](https://github.com/akgm3i/ADTeemo/issues/69), [#112](https://github.com/akgm3i/ADTeemo/issues/112), [#113](https://github.com/akgm3i/ADTeemo/issues/113), [#114](https://github.com/akgm3i/ADTeemo/issues/114)
-- Code: [API app](../../api/src/app.ts), [Bot main](../../bot/src/main.ts), [schema](../../api/src/db/schema.ts)
-- Tests: [Bot boundary tests](../../bot/check-runtime-boundary.test.ts), [repository tests](../../api/src/db/repositories.integration.test.ts)
-- Reviewed: 2026-11-19
-- Verified: 2026-09-29、local code reviewと一時SQLiteの並行更新・rollbackテスト。外部サービス実通信は未実施。
+- Summary: 全体構成、移行先と現行実装の違い、データと処理の責務を示す。
+- Read when: システム全体やworkspace間の関係を確認するとき。
+- Related: [配備方針](../adr/0008-cloudflare-deployment.md), [全体管理 #158](https://github.com/akigami-net/ADTeemo/issues/158)
+- Code: [API](../../api/src/app.ts), [Bot](../../bot/src/main.ts), [schema](../../api/src/db/schema.ts)
+- Tests: [Bot boundary](../../bot/check-runtime-boundary.test.ts), [repository](../../api/src/db/repositories.integration.test.ts)
+- Reviewed: 2026-11-25
+- Verified: 現行構成は2026-09-29のcode reviewとSQLite試験。移行先の根拠は配備・音声の調査文書を参照。
 
-## 構成
+## 全体構成
+
+Cloudflareを通常機能の移行先とし、音声中継にはCloud Run Jobsを検討している。以下は移行後の構成図で、現在の実装は後述する。
 
 ```mermaid
-graph LR
-    User[Discord利用者] --> Discord[Discord]
-    Discord --> Bot[Bot]
-    Bot --> API[Backend API]
-    API --> DB[(SQLite)]
-    API --> Riot[Riot API / static data]
-    API --> Opgg[任意のOP.GG連携]
-    Bot --> Discord
+flowchart TB
+    Discord[Discord]
+    Browser[Webブラウザー]
+
+    subgraph CF[Cloudflare：移行先]
+        Assets["Static Assets<br/>Web画面"]
+        API["Workers / Hono<br/>API・操作受付"]
+        Coordinator["単一Durable Object<br/>Gateway・定期処理・通知"]
+        DB[("D1<br/>設定・募集・戦績・ジョブ")]
+        Cron[Cron]
+        API --> Coordinator
+        API <--> DB
+        Coordinator <--> DB
+        Cron --> Coordinator
+    end
+
+    Browser --> Assets
+    Browser -->|API| API
+    Discord -->|コマンド・ボタン| API
+    Coordinator <-->|Gateway・REST| Discord
+    Coordinator --> Sources["Riot API<br/>公式ニュース・Wiki"]
+    Coordinator --> LLM["LLM API<br/>画像抽出・翻訳・質問回答"]
+    Monitor["UptimeRobot<br/>外部監視"] -->|稼働確認| API
+    Monitor -->|障害通知| Discord
+
+    subgraph Voice[音声中継：検証中]
+        Job["Cloud Run Jobs<br/>復号・混合・符号化"]
+        VCs[各サーバーのDiscord VC]
+        Job <-->|Voice WebSocket・UDP・DAVE| VCs
+    end
+    Coordinator -.->|起動・取消API| Job
+    Job <-->|制御WSS：Jobから接続| Coordinator
 ```
 
-Botはinteraction解釈・表示・Discord操作を担い、Riot API、静的データ、OP.GG、DB操作はBackend APIへ集約する。各workspaceの依存・実行taskはdeno.json、実行環境・Docker・設定は[CONTRIBUTING](../../CONTRIBUTING.md)を参照する。
+音声はDiscordとJobの間を流れ、Cloudflareには制御情報だけを渡す。1会議を1 Jobで処理し、独立した会議は別々に実行する。詳細は[音声中継案](../proposals/cloud-run-voice-relay.md)、採用理由は[ADR 0008](../adr/0008-cloudflare-deployment.md)、確認した仕様と実測値は[配備基盤の調査](../research/deployment-platforms.md)・[音声の検証](../research/cloud-run-voice-relay.md)に置く。
+
+## 現行実装
+
+現在はDenoのBotとHono APIを別プロセスで動かし、APIがSQLiteを管理する。Cloudflareへの移植、Webでの戦績閲覧・分析、音声中継は未実装。
+
+| 境界        | 責務                                          |
+| ----------- | --------------------------------------------- |
+| `bot/`      | Discord操作の受付、表示、VC移動、通知         |
+| `api/`      | DB更新、Riot API・静的データ・任意のOP.GG連携 |
+| `messages/` | 言語・テーマ別のメッセージ                    |
+
+実行環境・依存は各workspaceの`deno.json`、起動・配備手順は[開発者ガイド](../../CONTRIBUTING.md)を参照する。
 
 ## データ所有境界
 
-以下は現行保存構造の説明である。将来の設計判断は[合意要件](../../REQUIREMENTS.md#閲覧分析保持)と[ADR 0007](../adr/0007-product-requirements-baseline.md)に従う。物理的に一元保存しても、非共有の他guild内試合を閲覧・分析・編成へ流用しない。全ギルド共通評価を新実装の前提にしない。
-
-プレイヤー本人のDiscord identity、Riot account、戦績は現在一元保存する。メインロールはuserとguildの組、募集イベントとwatcherはguild単位で扱う。戦績は開催元eventとgame番号を参照し、記録時のPUUID snapshotを保持する。新しい分析・レート算出は閲覧/利用scopeを定めてから導入する。
-
-Discord側resource ID、募集channel、使用VC、saga状態はeventの所有情報である。guild設定とrole IDはguild別、Riot accountはPUUID単位でDiscord所有者とメイン指定を保持する。監視は全登録account、カスタムゲームはメイン1件を使う。[ADR 0006](../adr/0006-account-monitoring-policy.md)とschemaを正とし、Proposalの候補tableを現行モデルとみなさない。
-
-## 不変条件と入口
-
-- 認証と外部到達性: [ADR 0001](../adr/0001-bot-service-authentication.md)。Bot credentialを他サービスの秘密値と共有しない。
-- ログ: [ADR 0002](../adr/0002-structured-logging-trust-boundary.md)。stdout構造化ログを正本にし、opaqueなError本文や個人識別子を保存しない。
-- HTTPエラー: [APIエラー契約](../api-error-contract.md)。成否はHTTP statusで判定し、HTTP bodyにsuccessを持たせない。
-- 外部副作用とDB: [イベント整合性](../custom-game-event-consistency.md)、[戦績整合性](../record-match-consistency.md)。scope、冪等性、transactionと復旧をそれぞれの境界で守る。
-- 監視通知: [表示ADR](../adr/0003-match-display-priorities.md)、[ランクADR](../adr/0004-ranked-snapshot-lifecycle.md)、[OP.GG連携](./opgg.md)。
-- 文言: [messages編集ガイド](../../messages/README.md)。実際の文言はcatalogだけに保持する。
+- Discord identity、Riot account、戦績を一元保存し、メインロールと監視設定はguild単位で扱う。共有DBに保存した試合でも、閲覧・分析・編成への利用は[公開範囲](../../REQUIREMENTS.md#閲覧分析保持)に従う。
+- 募集channel、VC、Discord resource、進行状態はeventが所有する。戦績はeventとgame番号にひも付き、記録時のPUUIDを保持する。
+- 現行の試合監視は全登録account、カスタムゲームはメインaccountを使う。[ADR 0006](../adr/0006-account-monitoring-policy.md)を参照する。
 
 ## SQLite操作の直列化
 
-本番は1つの`Database`を[DB action factory](../../api/src/db/actions.ts)へ渡す。全repositoryの公開actionはこのDB単位で同じqueueを共有する。transactionを使わない更新と、一覧取得中にwatcherを再調整するactionも対象である。同じDBから複数のaction集合を生成してもqueueを共有し、別のテストDBは独立する。
+SQLiteの同時writerは1つに限られるため、[DB action](../../api/src/db/actions.ts)は`Database`インスタンス単位の共通queueを通す。取得処理を含む公開actionを直列化し、transaction内のSQLは再enqueueしない。外部HTTP待ちをqueue内へ含めない。
 
-[SQLiteは同じDBへのwriterを同時に1つに制限する](https://www.sqlite.org/isolation.html)。固定依存`@libsql/client 0.15.15`のlocal実装はtransaction開始後に通常操作用の接続を別途作るため、機能別のqueueでは`SQLITE_BUSY`を防げない。公開action全体を直列化し、失敗後もqueueを進める。読み取りだけのactionも同じ入口を通す小さな構成とし、全actionに外部HTTP待ちを含めない。transactionは原子的保存とrollbackを引き続き担う。
-
-内部repository関数とtransaction内SQLは再enqueueしない。イベントrosterとカスタム戦績だけの専用queueは廃止した。[並行書き込みテスト](../../api/src/db/writes.integration.test.ts)と[repository tests](../../api/src/db/repositories.integration.test.ts)が競合、rollback後の継続、再送の保証を持つ。queueはprocessと`Database`インスタンスの範囲であり、同じファイルを複数のAPI processや独立した接続factoryから更新する運用を追加する場合は、書き込み所有者を改めて設計する。migrationは稼働中のAPIと競合させない。
+この排他はprocess内だけで有効。複数API processや独立したDB接続から同じファイルへ書き込む構成では、書き込み所有者の再設計が必要になる。migrationも稼働中のAPIと競合させない。[並行更新・rollback・再送のテスト](../../api/src/db/writes.integration.test.ts)で保証する。
 
 ## Riot共有queue
 
-Riotへの呼び出しはBackend API process内の共有queueへ集約する。routing hostnameとmethodに応じたcooldown、rate-limit header、Retry-Afterを後続requestへ反映する。送信可能attemptはFIFOで直列化し、特定scopeの待機中は他scopeの送信slotを塞がない。timeout・network・429・5xxに限定したbounded retryと要求全体のdeadlineを持つ。
+Riot呼び出しはAPI process内の共有queueへ集約する。routing先・method別のrate limitとRetry-Afterを守り、送信可能な要求をFIFOで処理する。retry対象はtimeout・network error・429・5xxに限定する。
 
-正確なtimeout、attempt数、backoff、header処理は[queue実装](../../api/src/riot_api.ts)と[tests](../../api/src/riot_api_queue.test.ts)が正本。queueはprocess-localなので、標準運用はAPI 1 processとする。Bot sagaの排他もprocess-localであり、複数instance導入前に共有claimと状態を設計する。運用手順はCONTRIBUTINGへ集約する。
+queueとBotのsaga排他はprocess内に閉じるため、現行構成はAPI/Botとも単一processで運用する。待機時間・試行回数・deadlineは[実装](../../api/src/riot_api.ts)と[テスト](../../api/src/riot_api_queue.test.ts)を参照する。
+
+## 関連する設計
+
+- 認証とログ：[サービス認証](../adr/0001-bot-service-authentication.md)、[ログの信頼境界](../adr/0002-structured-logging-trust-boundary.md)
+- 更新と復旧：[イベント整合性](../custom-game-event-consistency.md)、[戦績整合性](../record-match-consistency.md)、[通知delivery](./match-notification-delivery.md)
+- APIと表示：[APIエラー契約](../api-error-contract.md)、[メッセージ編集](../../messages/README.md)

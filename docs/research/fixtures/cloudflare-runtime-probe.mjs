@@ -1,5 +1,5 @@
 // Standalone local evidence for ADR 0008, not an ADTeemo deployment or a live Discord test.
-// See ../zero-cost-deployment.md for pinned dependencies and the scope of these checks.
+// See ../deployment-platforms.md for pinned dependencies and the scope of these checks.
 import assert from "node:assert/strict";
 import { once } from "node:events";
 import { WebSocketServer } from "ws";

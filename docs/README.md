@@ -1,43 +1,34 @@
 # ドキュメント索引
 
-利用方法は[README](../README.md)、開発・運用は[CONTRIBUTING](../CONTRIBUTING.md)、テスト設計は[TESTING_STYLE](../TESTING_STYLE.md)、AI agentの制約は[AGENTS](../AGENTS.md)から入る。作業・優先度・受け入れ条件・完了状態は[GitHub Issues](https://github.com/akigami-net/ADTeemo/issues)だけで管理する。
+全体像は[システム構成](./integrations/architecture.md#全体構成)、開発・配備手順は[CONTRIBUTING](../CONTRIBUTING.md)、利用方法は[README](../README.md)から読む。
 
-## 正本の選び方
+## 文書の役割
 
-これから実現する振る舞いは[合意要件](../REQUIREMENTS.md)、段階的な提供と完了判定は[ADR 0007](./adr/0007-product-requirements-baseline.md)を読む。現在のcode・User guideと区別し、既存実装から要件の採否を逆算しない。[外部機能の実現性](./research/requirements-feasibility.md)にはヒアリング時の調査根拠と未検証点を記録する。
+| 文書                                                           | 書くこと                               | 書かないこと                         |
+| -------------------------------------------------------------- | -------------------------------------- | ------------------------------------ |
+| [合意要件](../REQUIREMENTS.md)                                 | 利用者が達成したいこと、提供条件       | 実装状況、具体的なAPIや保存schema    |
+| [システム構成](./integrations/architecture.md)                 | 全体図、責務、通信とデータの境界       | 起動コマンド、料金表、詳細な調査記録 |
+| [開発者ガイド](../CONTRIBUTING.md)                             | 準備、起動、検証、配備、復旧の手順     | 設計判断の長い説明                   |
+| ADR                                                            | 採用した判断、理由、影響、守る制約     | 実験の全記録、タスクの進捗           |
+| Proposal                                                       | 未採用の設計案、利点と制約、採用条件   | 実装済み機能としての説明             |
+| Research                                                       | 観測日、出典、方法、結果、未検証の範囲 | 設計手順、作業checklist              |
+| User guide                                                     | 現在使える操作と利用上の制約           | 未提供の機能、内部実装の詳細         |
+| [GitHub Issues](https://github.com/akigami-net/ADTeemo/issues) | 作業範囲、受け入れ条件、依存、進捗     | 文書の長文コピー                     |
 
-追加費用0円・カード追加なしでの配備判断は[ADR 0008](./adr/0008-zero-cost-cloudflare-deployment.md)、公式無料枠・候補比較・ローカルruntime試験の根拠は[配備先調査](./research/zero-cost-deployment.md)を参照する。設計採用と本番提供済みを区別し、Cloudflare構成で音声中継まで満たしたとは扱わない。
+API契約・schema・定数はcode/tests、依存・taskは`deno.json`、設定名は[.env.example](../.env.example)を参照する。利用者向けの文言はmessage catalogに置く。
 
-音声の暫定候補は[Cloud Run Jobsの構成図・検証結果](./research/cloud-run-voice-relay.md)を参照する。公開仕様・ローカルprobeの成功と、Discord実接続・追加請求0円の成立を分ける。
+## 書き方
 
-| 確認したいこと                | 正本                                                                                                                 |
-| ----------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| 利用できるcommand・option     | [registry](../bot/src/common/command_registry.ts)と[各command定義](../bot/src/commands)、利用者向け説明はUser guide  |
-| API・DB・計算・表示順・境界値 | code / schema / tests。文書へ同じ表・式・列定義を複製しない                                                          |
-| 採用理由と守る境界            | accepted ADR。実装と矛盾したら差異を調査し、黙って一方を書き換えない                                                 |
-| 未採用の選択肢                | Proposal。採用済み仕様として実装へ流用しない                                                                         |
-| 外部サービスの観測結果        | ResearchのObserved / Verified / 未検証点 / 再確認条件                                                                |
-| task・依存・runtime・環境変数 | [deno.json](../deno.json)、workspace定義、[.dvmrc](../.dvmrc)、[.env.example](../.env.example)と設定読込・検証コード |
+- 最初に、その文書で分かることを示す。構成図や結論を先に置き、説明を続ける。
+- 同じ説明は一か所にまとめ、他の文書から参照する。会話の経緯や作業実況は残さない。
+- 短い日本語で書き、専門用語は識別に必要な箇所で使う。自明な説明や目的のない注意書きを加えない。
+- 現行実装・採用済み設計・候補を区別する。検証範囲や重要な制約は該当節で明示し、各節で繰り返さない。
 
-## 文書種別とstatus
-
-| Type / 配置                                       | 責務                                                  | Status                               |
-| ------------------------------------------------- | ----------------------------------------------------- | ------------------------------------ |
-| `adr` / `adr/`                                    | 採用済み判断、理由、結果、却下案、code/testによる保証 | `accepted`, `superseded`             |
-| `proposal` / `proposals/`                         | 未採用の選択肢、trade-off、open question、決定先Issue | `proposed`, `rejected`, `superseded` |
-| `research` / `research/`                          | 日付付きのnon-normativeな観測・出典・調査方法・不明点 | `current`, `historical`              |
-| `integration` / `integrations/`または既存安定path | 現在の境界・運用・復旧、外部依存の再確認条件          | `current`, `superseded`              |
-| `user` / `user/`                                  | 現在利用可能な操作・観測する挙動・制約                | `current`, `superseded`              |
-| `content` / 対象workspace                         | message key・fallback・文体の編集規則                 | `current`, `superseded`              |
-| `navigation` / 旧path                             | 外部リンクを保つ移管案内だけ                          | `moved`                              |
-
-statusは文書の位置づけを表し、Issueの完了状態ではない。外部Researchの`current`も永続的な保証ではなく、観測日と再確認条件を必ず読む。
-
-## Topic / 変更対象から読む
+## 変更対象から探す
 
 | Topic / path                                     | 最初に読む文書                                                      | 次に確認するもの                                                                                              |
 | ------------------------------------------------ | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| 全体構成、workspace境界、`api/src/db/schema.ts`  | [構成とデータ所有境界](./integrations/architecture.md)              | 関連repository / migration tests                                                                              |
+| 全体構成、workspace境界、`api/src/db/schema.ts`  | [システム構成](./integrations/architecture.md)                      | 関連repository / migration tests                                                                              |
 | Botのproduction権限、`bot/deno.json`、Docker起動 | [Bot実行権限](./integrations/bot-runtime-permissions.md)            | permission smoke、CONTRIBUTING                                                                                |
 | 認証、`api/src/service_auth.ts`、Docker公開設定  | [ADR 0001](./adr/0001-bot-service-authentication.md)                | CONTRIBUTING、auth tests                                                                                      |
 | ログ、`lib/logger/`、API request middleware      | [ADR 0002](./adr/0002-structured-logging-trust-boundary.md)         | logger tests                                                                                                  |
@@ -56,13 +47,27 @@ statusは文書の位置づけを表し、Issueの完了状態ではない。外
 
 ## 種別別索引
 
-- ADR: [0001 認証](./adr/0001-bot-service-authentication.md)、[0002 ログ](./adr/0002-structured-logging-trust-boundary.md)、[0003 表示](./adr/0003-match-display-priorities.md)、[0004 ランク](./adr/0004-ranked-snapshot-lifecycle.md)、[0005 OP.GG](./adr/0005-optional-opgg-integration.md)、[0006 accountと監視](./adr/0006-account-monitoring-policy.md)。
-- Proposal: [既定監視](./proposals/default-watch-opt-out.md)、[表示拡張](./proposals/match-display-extensions.md)、[イベントフロー](./proposals/custom-game-flow.md)、[未採用の拡張](./proposals/project-scope.md)。
-- Research: [Podman互換性（保留）](./research/podman-compatibility.md)、[OP.GG Server Action](./research/opgg-server-actions.md)、[Discord connected accounts](./research/discord-lol-connections.md)、[Teemo参考記録](./research/teemo-character-notes.md)。
+- ADR: [0001 認証](./adr/0001-bot-service-authentication.md)、[0002 ログ](./adr/0002-structured-logging-trust-boundary.md)、[0003 表示](./adr/0003-match-display-priorities.md)、[0004 ランク](./adr/0004-ranked-snapshot-lifecycle.md)、[0005 OP.GG](./adr/0005-optional-opgg-integration.md)、[0006 accountと監視](./adr/0006-account-monitoring-policy.md)、[0007 実装方針](./adr/0007-product-requirements-baseline.md)、[0008 配備](./adr/0008-cloudflare-deployment.md)。
+- Proposal: [既定監視](./proposals/default-watch-opt-out.md)、[表示拡張](./proposals/match-display-extensions.md)、[イベントフロー](./proposals/custom-game-flow.md)、[未採用の拡張](./proposals/project-scope.md)、[Cloud Run音声中継](./proposals/cloud-run-voice-relay.md)。
+- Research: [Podman互換性（保留）](./research/podman-compatibility.md)、[OP.GG Server Action](./research/opgg-server-actions.md)、[Discord connected accounts](./research/discord-lol-connections.md)、[Teemo参考記録](./research/teemo-character-notes.md)、[外部機能](./research/requirements-feasibility.md)、[配備基盤](./research/deployment-platforms.md)、[Cloud Run音声](./research/cloud-run-voice-relay.md)。
 - Integration: [account監視の運用](./integrations/account-monitoring.md)、[監視テストの責務](./match-tracking-test-ownership.md)、[RSO](./integrations/rso.md)、[通知delivery](./integrations/match-notification-delivery.md)、[構成](./integrations/architecture.md)、[OP.GG](./integrations/opgg.md)、[APIエラー](./api-error-contract.md)、[イベント整合性](./custom-game-event-consistency.md)、[戦績整合性](./record-match-consistency.md)。
 - User: [account管理と監視](./user/riot-accounts-and-monitoring.md)、[カスタムゲーム](./user/custom-games.md)、[試合通知](./user/match-display.md)、[ランク・LP](./user/ranked-lp.md)。
 - Content: [messages](../messages/README.md)、[Teemo](../messages/TEEMO_STYLE.md)。
 - 旧pathの移管案内: [試合表示](./match-display.md)、[ランク](./ranked-lp.md)、[OP.GG](./opgg.md)、[opt-out](./default-watch-opt-out.md)、[Discord調査](./discord-lol-connections.md)、[メッセージ](./messages.md)、[Teemo](./teemo.md)。rootの旧入口は[SPEC](../SPEC.md)、[TASKS](../TASKS.md)。
+
+## 種別と状態
+
+| Type / 配置                                   | Status                               |
+| --------------------------------------------- | ------------------------------------ |
+| `adr` / `adr/`                                | `accepted`, `superseded`             |
+| `proposal` / `proposals/`                     | `proposed`, `rejected`, `superseded` |
+| `research` / `research/`                      | `current`, `historical`              |
+| `integration` / `integrations/`または既存path | `current`, `superseded`              |
+| `user` / `user/`                              | `current`, `superseded`              |
+| `content` / 対象workspace                     | `current`, `superseded`              |
+| `navigation` / 旧pathの移管案内               | `moved`                              |
+
+状態は文書の位置づけを表す。実装の完了状態はIssueで管理する。
 
 ## 共通headerと命名
 
@@ -84,24 +89,20 @@ statusは文書の位置づけを表し、Issueの完了状態ではない。外
 
 Researchには`Observed`、外部出典、調査方法、確認済み事実、未検証点、再確認条件を加える。元資料に日付がなければunknownとし、再編日を実観測日に置き換えない。Integrationも外部情報を扱う場合は検証範囲と再確認条件を持つ。
 
-## 記述例と情報の昇格
+## 採用・更新時の扱い
 
-- ADRはContext → Decision → Consequences → Rejected alternatives → Enforcement。例は[ADR 0005](./adr/0005-optional-opgg-integration.md)。重要な判断を変える場合は後続ADRを作り、旧ADRをsupersededにして相互リンクする。過去の判断を無言で上書きしない。
-- Proposalは背景・選択肢・trade-off・open question・決定先Issue。例は[opt-out案](./proposals/default-watch-opt-out.md)。採用時はADRまたは現行guideへ判断を昇格し、元Proposalに移管先を残す。
-- Researchは観測日・方法・出典・事実/推測の区別・未検証点・再確認条件。例は[OP.GG調査](./research/opgg-server-actions.md)。観測から設計を採用するときもResearch自体を仕様へ変えない。
+ADRはContext → Decision → Consequences → Rejected alternatives → Enforcementを基本とする。重要な判断を変える場合は後続ADRを作り、旧文書と相互リンクする。Proposalの採用時はADRへ判断を残し、Researchには当時の観測を保持する。
 
-Issueは問題・scope・受け入れ条件・依存・関連docの入口とする。長文調査や採用理由がIssue comment/PR discussionだけに生まれた場合はrepo文書へ昇格し、元discussionからリンクする。PRは最終変更と検証、commitは変更の履歴、code commentは局所的な「なぜ」とADRへのリンク、testsは実行可能な挙動と不変条件を担う。進捗checklistはIssueだけに置く。
-
-Issueタイトルは自然文、種類・領域はLabels、親子はnative sub-issueと本文番号fallback、実行順はDepends on、背景共有はRelatedで表す。詳しい操作規則は[CONTRIBUTING](../CONTRIBUTING.md)が正本。Conventional CommitsをIssueタイトルへ適用しない。
+Issue・PRの運用規則は[CONTRIBUTING](../CONTRIBUTING.md)、テスト規約は[TESTING_STYLE](../TESTING_STYLE.md)、agent向け指示は[AGENTS](../AGENTS.md)を参照する。
 
 ## 文書の検証
 
-repo rootで次を実行する。
+変更したファイルのformatと、索引・metadata・相対リンクを確認する。
 
 ```bash
+deno fmt --check --no-config --prose-wrap=preserve <変更したMarkdown>
 deno run --allow-read scripts/check-docs.ts
-deno fmt --check README.md SPEC.md TASKS.md CONTRIBUTING.md AGENTS.md docs/ messages/README.md messages/TEEMO_STYLE.md
 git diff --check
 ```
 
-`check-docs.ts`はroot/docs/messagesのMarkdownにある相対リンクの参照先・見出し、docs/messages文書の中央索引掲載、必須header、未知Type/Statusを検査する。Markdownのinline相対リンクを検査対象とし、外部URLの到達性は確認しない。Reviewed/Verifiedの真偽や内容の整合は関連code/testsとのreviewで確認する。自動CIへの組込みは[#122](https://github.com/akigami-net/ADTeemo/issues/122)の責務とし、この再編ではquality taskを変更しない。
+リンク先の実在・見出しと必須metadataは自動検査する。外部URLの内容や検証日の正しさはreviewで確認する。
